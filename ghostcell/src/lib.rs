@@ -3,7 +3,10 @@
 
 use core::{cell::UnsafeCell, marker::PhantomData, mem};
 
-type InvariantLifetime<'id> = PhantomData<fn(&'id ()) -> &'id ()>;
+#[derive(Clone, Copy)]
+struct Invariant<T>(fn(T) -> T);
+
+type InvariantLifetime<'id> = PhantomData<Invariant<&'id ()>>;
 
 pub struct GhostToken<'id> {
     _brand: InvariantLifetime<'id>,
@@ -101,6 +104,14 @@ impl<'id, T: Default> GhostCell<'id, T> {
 }
 
 #[forbid(unsafe_code)]
+impl<'id, T: Default> Default for GhostCell<'id, T> {
+    #[inline]
+    fn default() -> Self {
+        Self::new(Default::default())
+    }
+}
+
+#[forbid(unsafe_code)]
 impl<'id, T> GhostCell<'id, T> {
     #[inline]
     pub fn replace(&self, value: T, token: &mut GhostToken<'id>) -> T {
@@ -141,6 +152,13 @@ impl<T> From<T> for GhostCell<'_, T> {
     #[inline(always)]
     fn from(value: T) -> Self {
         Self::new(value)
+    }
+}
+
+impl<'id, T: Clone> GhostCell<'id, T> {
+    #[inline]
+    pub fn clone_with(&self, token: &GhostToken<'id>) -> Self {
+        GhostCell::new(self.ro(token).clone())
     }
 }
 
@@ -195,6 +213,7 @@ mod test {
 }
 
 #[doc(hidden)]
+#[cfg(test)]
 pub mod compile_tests {
     /// ```compile_fail
     /// use ghostcell::GhostToken;
