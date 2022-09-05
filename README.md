@@ -1,6 +1,6 @@
 # GhostCell
 
-An implementation of the [ghostcell paper](https://plv.mpi-sws.org/rustbelt/ghostcell/ghostcell)
+An implementation of the [ghostcell paper](https://plv.mpi-sws.org/rustbelt/ghostcell)
 in Rust.
 
 The ghostcell crate contains the actual implementation of the GhostCell. The ghostcell_macro
