@@ -1,7 +1,7 @@
 // Copyright 2022 Joshua Wong.
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 
-use std::{cell::UnsafeCell, marker::PhantomData, mem};
+use core::{cell::UnsafeCell, marker::PhantomData, mem};
 
 type InvariantLifetime<'id> = PhantomData<fn(&'id ()) -> &'id ()>;
 
