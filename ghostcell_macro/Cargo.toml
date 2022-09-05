@@ -1,0 +1,21 @@
+[package]
+name = "ghostcell_macro"
+version = "0.1.0"
+autotests = false
+edition = "2021"
+
+[lib]
+proc-macro = true
+
+[[test]]
+name = "tests"
+path = "tests/compile.rs"
+
+[dependencies]
+proc-macro2 = "1.0"
+syn = { version = "1.0", features = ["full"] }
+quote = "1.0"
+
+[dev-dependencies]
+trybuild = { version = "1.0", features = ["diff"] }
+ghostcell = { path = "../ghostcell" }
